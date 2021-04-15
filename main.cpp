@@ -52,14 +52,14 @@ struct Space {
     bool b0;
     int i;
     bool b1;
-    double d;
+    double test;
 };
 
 struct LessSpace {
     bool b0;
     bool b1;
     int i;
-    double d;
+    double test;
 };
 
 #pragma pack(push, 1)
@@ -67,7 +67,7 @@ struct Pack {
     bool b0;
     int i;
     bool b1;
-    double d;
+    double test;
 };
 #pragma pack(pop)
 
@@ -80,8 +80,8 @@ static void struct_size_benchmark(benchmark::State &state) {
     for (auto _: state) {
         for (auto j = 0; j < ITERATIONS; ++j) {
             for (auto ptr = array; ptr != (array + size); ptr += 1) {
-                benchmark::DoNotOptimize((*ptr).d += 1.0);
-                benchmark::DoNotOptimize(tmp = (*ptr).d);
+                benchmark::DoNotOptimize((*ptr).test += 1.0);
+                benchmark::DoNotOptimize(tmp = (*ptr).test);
             }
         }
     }
@@ -94,17 +94,17 @@ static void struct_size_benchmark(benchmark::State &state) {
 
 struct MaxPad {
     int padding[19];
-    int i;
+    int test;
 };
 
 struct AvgPad {
     int padding[17];
-    int i;
+    int test;
 };
 
 struct MinPad {
     int padding[15];
-    int i;
+    int test;
 
 };
 
@@ -113,12 +113,12 @@ static void padding_benchmark(benchmark::State &state) {
     size_t size = state.range(0);
     auto array = new T[size];
 
-    double tmp = 0.0;
+    int tmp = 0;
     for (auto _: state) {
         for (auto j = 0; j < ITERATIONS; ++j) {
             for (auto ptr = array; ptr != (array + size); ptr += 1) {
-                benchmark::DoNotOptimize((*ptr).i += 1);
-                benchmark::DoNotOptimize(tmp = (*ptr).i);
+                benchmark::DoNotOptimize((*ptr).test += 1);
+                benchmark::DoNotOptimize(tmp = (*ptr).test);
             }
         }
     }
@@ -140,7 +140,7 @@ static std::vector<int> random_array(size_t size) {
     return array;
 }
 
-static void cubed_comp_benchmark(benchmark::State &state) {
+static void bubble_benchmark(benchmark::State &state) {
     size_t size = state.range(0);
     std::vector<int> array = random_array(size);
 
@@ -158,7 +158,7 @@ static void cubed_comp_benchmark(benchmark::State &state) {
     state.SetComplexityN(size);
 }
 
-static void nlogn_comp_benchmark(benchmark::State &state) {
+static void quick_benchmark(benchmark::State &state) {
     size_t size = state.range(0);
     std::vector<int> array = random_array(size);
 
@@ -203,10 +203,10 @@ int main(int argc, char **argv) {
         benchmark::RegisterBenchmark("min padding", padding_benchmark<MinPad>)->ArgName("size")->Arg(run);
     }
 
-    benchmark::RegisterBenchmark("comp", cubed_comp_benchmark)->RangeMultiplier(2)->Range(1 << 10,
-                                                                                          1 << 16)->Complexity();
-    benchmark::RegisterBenchmark("sort", nlogn_comp_benchmark)->RangeMultiplier(2)->Range(1 << 10,
-                                                                                          1 << 16)->Complexity();
+    benchmark::RegisterBenchmark("bubble sort", bubble_benchmark)->RangeMultiplier(2)->Range(1 << 10,
+                                                                                             1 << 16)->Complexity();
+    benchmark::RegisterBenchmark("quick sort", quick_benchmark)->RangeMultiplier(2)->Range(1 << 10,
+                                                                                           1 << 16)->Complexity();
 
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();
