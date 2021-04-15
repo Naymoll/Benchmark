@@ -104,8 +104,12 @@ struct AvgPad {
 
 struct MinPad {
     int padding[15];
+<<<<<<< HEAD
     int test;
 
+=======
+    int i;
+>>>>>>> 12b3b7eae0c5599c03911de1d64664602625c3b2
 };
 
 template<class T>
@@ -203,10 +207,17 @@ int main(int argc, char **argv) {
         benchmark::RegisterBenchmark("min padding", padding_benchmark<MinPad>)->ArgName("size")->Arg(run);
     }
 
+<<<<<<< HEAD
     benchmark::RegisterBenchmark("bubble sort", bubble_benchmark)->RangeMultiplier(2)->Range(1 << 10,
                                                                                              1 << 16)->Complexity();
     benchmark::RegisterBenchmark("quick sort", quick_benchmark)->RangeMultiplier(2)->Range(1 << 10,
                                                                                            1 << 16)->Complexity();
+=======
+    benchmark::RegisterBenchmark("cubed", cubed_comp_benchmark)->RangeMultiplier(2)->Range(1 << 10,
+                                                                                          1 << 16)->Complexity();
+    benchmark::RegisterBenchmark("nlogn", nlogn_comp_benchmark)->RangeMultiplier(2)->Range(1 << 10,
+                                                                                          1 << 16)->Complexity();
+>>>>>>> 12b3b7eae0c5599c03911de1d64664602625c3b2
 
     benchmark::Initialize(&argc, argv);
     benchmark::RunSpecifiedBenchmarks();
